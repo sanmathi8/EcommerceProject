@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LuxCart | Create Account{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-6 col-lg-7 col-md-9">
+            <div class="card auth-card border-0 shadow-lg rounded-4 overflow-hidden animate-fade-in">
+                <!-- Card Header with Accent Gradient -->
+                <div class="auth-card-header text-center py-4 px-4">
+                    <div class="brand-logo-icon mb-2">
+                        <i class="fa-solid fa-user-plus text-white display-4"></i>
+                    </div>
+                    <h2 class="text-white fw-bold mb-1">Create Account</h2>
+                    <p class="text-white-50 mb-0">Join LuxCart today and experience premium shopping</p>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form method="POST" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Form Global Errors -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger border-0 rounded-3 shadow-sm mb-4">
+                                {% for error in form.non_field_errors %}
+                                    <p class="mb-0 small"><i class="fa-solid fa-circle-exclamation me-2"></i>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Loop through and render fields -->
+                        <div class="row">
+                            {% for field in form %}
+                                <div class="col-12 {% if field.name == 'first_name' or field.name == 'last_name' %}col-md-6{% endif %} mb-4">
+                                    <label for="{{ field.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider mb-1">
+                                        {{ field.label }}
+                                        {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                    </label>
+                                    
+                                    {{ field }}
+                                    
+                                    {% if field.help_text %}
+                                        <div class="form-text text-muted small mt-1">{{ field.help_text|safe }}</div>
+                                    {% endif %}
+                                    
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small mt-1">
+                                            <i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Register button -->
+                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm py-3 mt-3 hover-scale">
+                            Create Account <i class="fa-solid fa-user-check ms-2"></i>
+                        </button>
+                    </form>
+
+                    <!-- Footer Link -->
+                    <div class="text-center mt-4 pt-3 border-top border-light">
+                        <p class="text-muted mb-0">
+                            Already have an account? 
+                            <a href="{% url 'login' %}" class="fw-bold text-primary text-decoration-none hover-underline">Sign In</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

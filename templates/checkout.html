@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LuxCart | Checkout{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="fw-extrabold text-dark mb-4">Checkout</h1>
+    
+    <div class="row g-5">
+        <!-- Shipping details form -->
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <h4 class="fw-bold text-dark mb-4">
+                    <i class="fa-solid fa-truck-ramp-box text-primary me-2"></i> Shipping & Delivery Details
+                </h4>
+                
+                <form method="POST" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Form Errors -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger border-0 rounded-3 mb-4">
+                            <p class="mb-0 fw-bold small">Please fix the validation errors below:</p>
+                        </div>
+                    {% endif %}
+
+                    <!-- Customer Name -->
+                    <div class="mb-3">
+                        <label for="{{ form.customer.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Full Name</label>
+                        {{ form.customer }}
+                        {% for error in form.customer.errors %}
+                            <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row">
+                        <!-- Email -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.email.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Email Address</label>
+                            {{ form.email }}
+                            {% for error in form.email.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Phone -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.phone.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Phone Number</label>
+                            {{ form.phone }}
+                            {% for error in form.phone.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="mb-3">
+                        <label for="{{ form.address.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Shipping Address</label>
+                        {{ form.address }}
+                        {% for error in form.address.errors %}
+                            <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row">
+                        <!-- City -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.city.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">City</label>
+                            {{ form.city }}
+                            {% for error in form.city.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Zip Code -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.zip_code.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Zip / Postal Code</label>
+                            {{ form.zip_code }}
+                            {% for error in form.zip_code.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Place Order Button -->
+                    <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill py-3 mt-4 shadow-md hover-scale">
+                        Place Order <i class="fa-solid fa-circle-check ms-2"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Order Summary Sidebar -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white position-sticky" style="top: 100px;">
+                <h4 class="fw-bold text-dark mb-4">In Your Cart</h4>
+                
+                <div class="checkout-items-list mb-4 overflow-y-auto" style="max-height: 280px;">
+                    {% for item in cart.items.all %}
+                        <div class="d-flex align-items-center justify-content-between py-3 {% if not forloop.last %}border-bottom border-light{% endif %}">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="rounded-3 bg-light overflow-hidden flex-shrink-0" style="width: 50px; height: 50px;">
+                                    {% if item.product.image %}
+                                        <img src="{{ item.product.image }}" class="w-100 h-100 object-fit-cover" alt="{{ item.product.name }}">
+                                    {% else %}
+                                        <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                                            <i class="fa-solid fa-image"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0 text-truncate" style="max-width: 180px;">{{ item.product.name }}</h6>
+                                    <span class="text-muted small">Qty: {{ item.quantity }}</span>
+                                </div>
+                            </div>
+                            <span class="fw-bold text-dark">${{ item.get_total_price }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="pt-3 border-top border-light">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal</span>
+                        <span class="fw-semibold text-dark">${{ cart.total_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Shipping</span>
+                        <span class="text-success fw-bold">FREE</span>
+                    </div>
+                    <hr class="my-3 text-muted">
+                    <div class="d-flex justify-content-between align-items-baseline mb-0">
+                        <span class="h5 fw-bold text-dark mb-0">Total</span>
+                        <span class="h4 fw-extrabold text-primary mb-0">${{ cart.total_price }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

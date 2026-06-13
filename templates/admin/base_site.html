@@ -1,0 +1,79 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:'Django site admin' }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    /* Customize Django Admin Theme with LuxCart Brand Colors */
+    :root {
+        --primary: #4f46e5 !important;
+        --primary-fg: #ffffff !important;
+        --primary-accent: #7c3aed !important;
+        --primary-accent-fg: #ffffff !important;
+        --header-bg: #0f172a !important;
+        --header-fg: #ffffff !important;
+        --header-link-color: #cbd5e1 !important;
+        --breadcrumbs-bg: #f8fafc !important;
+        --breadcrumbs-link-color: #64748b !important;
+        --breadcrumbs-fg: #1e293b !important;
+        --link-color: #4f46e5 !important;
+        --link-hover-color: #4338ca !important;
+        --link-selected-color: #4338ca !important;
+        --button-bg: #4f46e5 !important;
+        --button-hover-bg: #4338ca !important;
+        --default-button-bg: #64748b !important;
+        --default-button-hover-bg: #475569 !important;
+    }
+    
+    #header {
+        background: #0f172a !important;
+        border-bottom: 2px solid #4f46e5 !important;
+        padding: 15px 40px !important;
+    }
+    
+    .module h2, .theme-toggle {
+        background: #4f46e5 !important;
+    }
+    
+    #branding h1 {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-weight: 800 !important;
+        font-size: 22px !important;
+        color: #ffffff !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    #branding h1 a {
+        color: #ffffff !important;
+        text-decoration: none !important;
+    }
+    
+    div.breadcrumbs {
+        border-bottom: 1px solid #e2e8f0 !important;
+        background: #f8fafc !important;
+        padding: 10px 40px !important;
+    }
+    
+    .submit-row input[type="submit"].default {
+        background: #4f46e5 !important;
+    }
+    
+    .submit-row input[type="submit"].default:hover {
+        background: #4338ca !important;
+    }
+    
+    /* Font Awesome icons support inside branding */
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <i class="fa-solid fa-bag-shopping" style="margin-right: 8px; color: #a5b4fc;"></i> LuxCart Administration
+    </a>
+</h1>
+{% endblock %}

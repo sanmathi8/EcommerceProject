@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LuxCart | Profile Settings{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="fw-extrabold text-dark mb-4">My Account</h1>
+    
+    <div class="row g-4">
+        <!-- Sidebar Navigation -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white p-4">
+                <div class="text-center py-3">
+                    <div class="profile-avatar mb-3 mx-auto d-flex align-items-center justify-content-center bg-primary text-white rounded-circle fs-1 fw-bold" style="width: 80px; height: 80px;">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    <h5 class="fw-bold text-dark mb-1">{{ user.first_name }} {{ user.last_name }}</h5>
+                    <p class="text-muted small mb-0">@{{ user.username }}</p>
+                    <span class="badge bg-light text-muted border border-light rounded-pill mt-2">Member since {{ user.date_joined|date:"M Y" }}</span>
+                </div>
+                
+                <hr class="my-4 text-muted">
+                
+                <div class="list-group list-group-flush profile-menu">
+                    <a href="{% url 'profile' %}" class="list-group-item list-group-item-action border-0 rounded-3 py-3 mb-1 active">
+                        <i class="fa-solid fa-user-gear me-3"></i>Profile Settings
+                    </a>
+                    <a href="{% url 'orders' %}" class="list-group-item list-group-item-action border-0 rounded-3 py-3 mb-1">
+                        <i class="fa-solid fa-receipt me-3"></i>Order History
+                    </a>
+                    <a href="{% url 'cart' %}" class="list-group-item list-group-item-action border-0 rounded-3 py-3 mb-1">
+                        <i class="fa-solid fa-cart-shopping me-3"></i>Shopping Cart
+                    </a>
+                    <a href="{% url 'logout' %}" class="list-group-item list-group-item-action border-0 rounded-3 py-3 text-danger">
+                        <i class="fa-solid fa-sign-out-alt me-3"></i>Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forms Dashboard -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <h4 class="fw-bold text-dark mb-4">
+                    <i class="fa-solid fa-id-card text-primary me-2"></i> Account Information
+                </h4>
+                
+                <form method="POST" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <h5 class="fw-bold text-dark border-bottom border-light pb-2 mb-3">Personal Details</h5>
+                    
+                    <div class="row">
+                        <!-- First Name -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ user_form.first_name.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">First Name</label>
+                            {{ user_form.first_name }}
+                            {% for error in user_form.first_name.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Last Name -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ user_form.last_name.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Last Name</label>
+                            {{ user_form.last_name }}
+                            {% for error in user_form.last_name.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="mb-4">
+                        <label for="{{ user_form.email.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Email Address</label>
+                        {{ user_form.email }}
+                        {% for error in user_form.email.errors %}
+                            <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    
+                    <h5 class="fw-bold text-dark border-bottom border-light pb-2 mb-3 mt-4">Shipping & Contact Details</h5>
+                    
+                    <div class="row">
+                        <!-- Phone Number -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ profile_form.phone.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Phone Number</label>
+                            {{ profile_form.phone }}
+                            {% for error in profile_form.phone.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- Zip Code -->
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ profile_form.zip_code.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Zip / Postal Code</label>
+                            {{ profile_form.zip_code }}
+                            {% for error in profile_form.zip_code.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Address -->
+                    <div class="mb-3">
+                        <label for="{{ profile_form.address.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Default Address</label>
+                        {{ profile_form.address }}
+                        {% for error in profile_form.address.errors %}
+                            <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- City -->
+                    <div class="mb-4">
+                        <label for="{{ profile_form.city.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">City</label>
+                        {{ profile_form.city }}
+                        {% for error in profile_form.city.errors %}
+                            <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 py-3 mt-3 shadow-md hover-scale">
+                        Save Profile Changes <i class="fa-solid fa-circle-check ms-2"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LuxCart | {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb Navigation -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}" class="text-decoration-none">Home</a></li>
+            {% if product.category %}
+                <li class="breadcrumb-item">
+                    <a href="{% url 'home' %}?category={{ product.category.id }}" class="text-decoration-none">{{ product.category.name }}</a>
+                </li>
+            {% endif %}
+            <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+        </ol>
+    </nav>
+
+    <!-- Product Detail Section -->
+    <div class="row g-5">
+        <!-- Left Column: Product Image -->
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-light product-detail-image-card">
+                {% if product.image %}
+                    <img src="{{ product.image }}" class="img-fluid w-100 detail-product-img" alt="{{ product.name }}">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center text-muted min-vh-40">
+                        <i class="fa-solid fa-image fs-1 opacity-20"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Column: Product Info -->
+        <div class="col-md-6 d-flex flex-column justify-content-between">
+            <div class="product-info-header mb-4">
+                {% if product.category %}
+                    <span class="badge bg-primary-gradient rounded-pill px-3 py-2 mb-2 shadow-sm text-uppercase tracking-wider small">
+                        {{ product.category.name }}
+                    </span>
+                {% endif %}
+                
+                <h1 class="display-5 fw-extrabold text-dark mb-2">{{ product.name }}</h1>
+                
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <!-- Rating placeholder for premium feel -->
+                    <div class="text-warning-glow">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                        <span class="text-muted small ms-1">(4.5 / 5.0)</span>
+                    </div>
+                    <span class="text-muted">|</span>
+                    <!-- Stock status badge -->
+                    {% if product.stock <= 0 %}
+                        <span class="badge bg-danger rounded-pill px-3 py-1">Out of Stock</span>
+                    {% elif product.stock < 3 %}
+                        <span class="badge bg-warning text-dark rounded-pill px-3 py-1">Only {{ product.stock }} items left!</span>
+                    {% else %}
+                        <span class="badge bg-success rounded-pill px-3 py-1">In Stock</span>
+                    {% endif %}
+                </div>
+
+                <div class="price-box py-3 px-4 bg-light rounded-3 d-inline-block mb-4">
+                    <span class="text-muted small d-block text-uppercase tracking-wider fw-bold">Price</span>
+                    <span class="display-6 fw-extrabold text-primary">${{ product.price }}</span>
+                </div>
+
+                <h5 class="fw-bold text-dark mb-2">Description</h5>
+                <p class="text-muted leading-relaxed mb-4">
+                    {{ product.description }}
+                </p>
+            </div>
+
+            <!-- Action Area -->
+            <div class="product-actions-area pt-4 border-top border-light">
+                <div class="row g-3">
+                    <div class="col-sm-8">
+                        {% if product.stock > 0 %}
+                            <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-lg w-100 rounded-pill py-3 shadow-md hover-scale d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-cart-plus me-2 fs-5"></i> Add to Shopping Cart
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary btn-lg w-100 rounded-pill py-3" disabled>
+                                <i class="fa-solid fa-ban me-2"></i> Currently Sold Out
+                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-4">
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg w-100 rounded-pill py-3">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Back
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Trust Badges (Premium look) -->
+                <div class="row text-center mt-5 g-3 py-3 bg-light rounded-4">
+                    <div class="col-4">
+                        <div class="trust-item">
+                            <i class="fa-solid fa-truck-fast text-primary fs-3 mb-2"></i>
+                            <h6 class="fw-bold mb-0 small text-dark">Free Shipping</h6>
+                            <span class="text-muted xx-small">On all orders</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="trust-item">
+                            <i class="fa-solid fa-shield-halved text-primary fs-3 mb-2"></i>
+                            <h6 class="fw-bold mb-0 small text-dark">Secure Payment</h6>
+                            <span class="text-muted xx-small">100% SSL protected</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="trust-item">
+                            <i class="fa-solid fa-rotate-left text-primary fs-3 mb-2"></i>
+                            <h6 class="fw-bold mb-0 small text-dark">Easy Returns</h6>
+                            <span class="text-muted xx-small">30-day money back</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

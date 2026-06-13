@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LuxCart | Account Login{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-6 col-md-8">
+            <div class="card auth-card border-0 shadow-lg rounded-4 overflow-hidden animate-fade-in">
+                <!-- Card Header with Accent Gradient -->
+                <div class="auth-card-header text-center py-4 px-4">
+                    <div class="brand-logo-icon mb-2">
+                        <i class="fa-solid fa-bag-shopping text-white display-4"></i>
+                    </div>
+                    <h2 class="text-white fw-bold mb-1">Welcome Back</h2>
+                    <p class="text-white-50 mb-0">Sign in to continue to LuxCart</p>
+                </div>
+                
+                <!-- Card Body -->
+                <div class="card-body p-4 p-md-5 bg-white">
+                    <form method="POST" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Form Global Errors -->
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger border-0 rounded-3 shadow-sm mb-4">
+                                {% for error in form.non_field_errors %}
+                                    <p class="mb-0 small"><i class="fa-solid fa-circle-exclamation me-2"></i>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <!-- Username Field -->
+                        <div class="mb-4">
+                            <label for="{{ form.username.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fa-regular fa-user text-muted"></i></span>
+                                <input type="text" name="username" id="{{ form.username.id_for_label }}" class="form-control bg-light border-start-0" placeholder="Enter your username" required>
+                            </div>
+                            {% for error in form.username.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label for="{{ form.password.id_for_label }}" class="form-label small fw-bold text-muted text-uppercase tracking-wider mb-0">Password</label>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-lock text-muted"></i></span>
+                                <input type="password" name="password" id="{{ form.password.id_for_label }}" class="form-control bg-light border-start-0" placeholder="Enter your password" required>
+                            </div>
+                            {% for error in form.password.errors %}
+                                <div class="text-danger small mt-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> {{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Login button -->
+                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm py-3 mt-2 hover-scale">
+                            Sign In <i class="fa-solid fa-arrow-right-to-bracket ms-2"></i>
+                        </button>
+                    </form>
+
+                    <!-- Footer Link -->
+                    <div class="text-center mt-4 pt-3 border-top border-light">
+                        <p class="text-muted mb-0">
+                            New to LuxCart? 
+                            <a href="{% url 'register' %}" class="fw-bold text-primary text-decoration-none hover-underline">Create Account</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

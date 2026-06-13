@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}LuxCart | My Orders{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="fw-extrabold text-dark mb-4">My Orders</h1>
+
+    {% if orders %}
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="accordion order-accordion d-flex flex-column gap-3" id="ordersAccordion">
+                    {% for order in orders %}
+                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                            <!-- Accordion Header -->
+                            <div class="card-header border-0 bg-white p-4" id="heading{{ order.id }}">
+                                <div class="row align-items-center g-3">
+                                    <div class="col-md-3">
+                                        <span class="text-muted small d-block">Order Number</span>
+                                        <span class="fw-bold text-dark">#LC-00{{ order.id }}</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <span class="text-muted small d-block">Date Placed</span>
+                                        <span class="fw-bold text-dark">{{ order.created|date:"M d, Y, h:i A" }}</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="text-muted small d-block">Total Amount</span>
+                                        <span class="fw-extrabold text-primary">${{ order.total }}</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <span class="text-muted small d-block">Status</span>
+                                        <span class="badge rounded-pill px-3 py-1.5 mt-1
+                                            {% if order.status == 'Pending' %}bg-warning text-dark
+                                            {% elif order.status == 'Processing' %}bg-info text-white
+                                            {% elif order.status == 'Shipped' %}bg-primary text-white
+                                            {% elif order.status == 'Completed' %}bg-success text-white
+                                            {% else %}bg-danger text-white{% endif %}">
+                                            {{ order.status }}
+                                        </span>
+                                    </div>
+                                    <div class="col-md-2 text-md-end">
+                                        <button class="btn btn-outline-primary btn-sm rounded-pill px-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ order.id }}" aria-expanded="false" aria-controls="collapse{{ order.id }}">
+                                            Details <i class="fa-solid fa-chevron-down ms-1 small"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Accordion Body -->
+                            <div id="collapse{{ order.id }}" class="collapse" aria-labelledby="heading{{ order.id }}" data-bs-parent="#ordersAccordion">
+                                <div class="card-body border-top border-light p-4 bg-light-subtle">
+                                    <div class="row g-4">
+                                        <!-- Order Items -->
+                                        <div class="col-md-7">
+                                            <h6 class="fw-bold text-dark mb-3">Items Ordered</h6>
+                                            <div class="d-flex flex-column gap-3">
+                                                {% for item in order.items.all %}
+                                                    <div class="d-flex align-items-center justify-content-between p-2 bg-white rounded-3 border border-light">
+                                                        <div class="d-flex align-items-center gap-3">
+                                                            <div class="rounded-3 bg-light overflow-hidden flex-shrink-0" style="width: 50px; height: 50px;">
+                                                                {% if item.product.image %}
+                                                                    <img src="{{ item.product.image }}" class="w-100 h-100 object-fit-cover" alt="{{ item.product.name }}">
+                                                                {% else %}
+                                                                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                                                                        <i class="fa-solid fa-image"></i>
+                                                                    </div>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div>
+                                                                <h6 class="fw-bold text-dark mb-0 text-truncate" style="max-width: 200px;">
+                                                                    {% if item.product %}
+                                                                        {{ item.product.name }}
+                                                                    {% else %}
+                                                                        Deleted Product
+                                                                    {% endif %}
+                                                                </h6>
+                                                                <span class="text-muted small">Qty: {{ item.quantity }}</span>
+                                                            </div>
+                                                        </div>
+                                                        <span class="fw-bold text-dark">${{ item.get_total_price }}</span>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+
+                                        <!-- Delivery Details -->
+                                        <div class="col-md-5">
+                                            <h6 class="fw-bold text-dark mb-3">Delivery Information</h6>
+                                            <div class="bg-white p-3 rounded-3 border border-light text-muted small">
+                                                <p class="mb-1"><strong class="text-dark">Recipient:</strong> {{ order.customer }}</p>
+                                                <p class="mb-1"><strong class="text-dark">Email:</strong> {{ order.email }}</p>
+                                                {% if order.phone %}
+                                                    <p class="mb-1"><strong class="text-dark">Phone:</strong> {{ order.phone }}</p>
+                                                {% endif %}
+                                                <p class="mb-0"><strong class="text-dark">Address:</strong> {{ order.address }}, {{ order.city }}, {{ order.zip_code }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="row justify-content-center py-5">
+            <div class="col-md-6 text-center py-5">
+                <div class="empty-orders-box mb-4 animate-bounce">
+                    <i class="fa-solid fa-receipt text-muted display-1 opacity-30"></i>
+                </div>
+                <h3 class="fw-bold text-dark mb-2">No Orders Found</h3>
+                <p class="text-muted mb-4 mx-auto" style="max-width: 400px;">
+                    You haven't placed any orders yet. Once you order some products, they will appear here!
+                </p>
+                <a href="{% url 'home' %}" class="btn btn-primary rounded-pill px-5 py-3 shadow-md hover-scale">
+                    Start Shopping Now
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
